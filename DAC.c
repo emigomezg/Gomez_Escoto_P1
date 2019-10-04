@@ -33,21 +33,51 @@
  */
 
 #include "DAC.h"
+#include "Signal_Generator.h"
 
-typedef struct {
-	uint8_t data_high;
-	uint8_t data_low;
-}dac_data_t;
+dac_data_out_t DAC0_data_t = {0,0};
+
+dac_data_out_t DAC1_data_t = {0,0};
 
 void DAC0_init(void)
 {
-    SIM->SCGC2 |= 0x80000000;   /* clock to DAC module */
-    DAC0->C1 = 0;               /* disable the use of buffer */
-    DAC0->C0 = 0x80 | 0x20;     /* enable DAC and use software trigger */
+    SIM->SCGC2 |= SIM_SCGC2_DAC0_MASK;   /* clock to DAC module */
+   // DAC0->C1 = 0;               /* disable the use of buffer */
+    //DAC0->C0 = 0x80 | 0x20;    /* enable DAC and use software trigger */
+    DAC0->C0 |= 0xC0;
 }
 
-void DAC0_out(uint8_t data_out_high,uint8_t data_out_low)
+void DAC1_init(void)
 {
-	DAC0->DAT->DATH = data_out_high;
-	DAC0->DAT->DATL = data_out_low;
+    SIM->SCGC2 |= SIM_SCGC2_DAC1_MASK;   /* clock to DAC module */
+    //DAC1->C1 = 0;               /* disable the use of buffer */
+   // DAC1->C0 = 0x80 | 0x20;    /* enable DAC and use software trigger */
+    DAC1->C0 |= 0xC0;
 }
+
+void DAC0_out_value(dac_data_out_t data_out)
+{
+
+	DAC0->DAT[0].DATL = data_out.data_low;
+	DAC0->DAT[0].DATH = data_out.data_high;
+	delay(32000);
+}
+
+void DAC1_out_value(dac_data_out_t data_out)
+{
+
+	DAC1->DAT[0].DATL = data_out.data_low;
+	DAC1->DAT[0].DATH = data_out.data_high;
+	delay(32000);
+}
+
+void delay(uint16_t delay)
+{
+	volatile uint16_t counter;
+
+	for(counter = delay; counter > 0; counter--)
+	{
+	}
+}
+
+
