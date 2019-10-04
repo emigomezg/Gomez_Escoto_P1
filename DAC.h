@@ -9,7 +9,6 @@
 #define DAC_H_
 
 #include "MK64F12.h"
-#include <stdio.h>
 
 typedef struct  {
 	uint8_t data_high;
@@ -23,7 +22,5 @@ void DAC0_out_value(dac_data_out_t);
 void DAC1_init(void);
 
 void DAC1_out_value(dac_data_out_t);
-
-void delay(uint16_t);
 
 #endif /* DAC_H_ */

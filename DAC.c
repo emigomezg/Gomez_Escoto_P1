@@ -42,17 +42,13 @@ dac_data_out_t DAC1_data_t = {0,0};
 void DAC0_init(void)
 {
     SIM->SCGC2 |= SIM_SCGC2_DAC0_MASK;   /* clock to DAC module */
-   // DAC0->C1 = 0;               /* disable the use of buffer */
-    //DAC0->C0 = 0x80 | 0x20;    /* enable DAC and use software trigger */
-    DAC0->C0 |= 0xC0;
+    DAC0->C0 |= 0xC0;                    /* enable DAC and use software trigger */
 }
 
 void DAC1_init(void)
 {
     SIM->SCGC2 |= SIM_SCGC2_DAC1_MASK;   /* clock to DAC module */
-    //DAC1->C1 = 0;               /* disable the use of buffer */
-   // DAC1->C0 = 0x80 | 0x20;    /* enable DAC and use software trigger */
-    DAC1->C0 |= 0xC0;
+    DAC1->C0 |= 0xC0;                    /* enable DAC and use software trigger */
 }
 
 void DAC0_out_value(dac_data_out_t data_out)
@@ -60,7 +56,6 @@ void DAC0_out_value(dac_data_out_t data_out)
 
 	DAC0->DAT[0].DATL = data_out.data_low;
 	DAC0->DAT[0].DATH = data_out.data_high;
-	delay(32000);
 }
 
 void DAC1_out_value(dac_data_out_t data_out)
@@ -68,16 +63,4 @@ void DAC1_out_value(dac_data_out_t data_out)
 
 	DAC1->DAT[0].DATL = data_out.data_low;
 	DAC1->DAT[0].DATH = data_out.data_high;
-	delay(32000);
 }
-
-void delay(uint16_t delay)
-{
-	volatile uint16_t counter;
-
-	for(counter = delay; counter > 0; counter--)
-	{
-	}
-}
-
-

@@ -8,11 +8,5 @@
 
 int main(void)
 {
-	DAC0_init();
-
-	for(;;)
-	{
-		DAC0_signal_creator(SINE);
-	}
     return 0 ;
 }
