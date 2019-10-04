@@ -12,6 +12,15 @@
 
 #include "GPIO.h"
 
+
+
+#define GPIO_CLOCKA  GPIO_CLOCK_GATING_PORTA
+#define GPIO_CLOCKB  GPIO_CLOCK_GATING_PORTB
+#define GPIO_CLOCKC  GPIO_CLOCK_GATING_PORTC
+#define GPIO_CLOCKD  GPIO_CLOCK_GATING_PORTD
+#define GPIO_CLOCKE  GPIO_CLOCK_GATING_PORTE
+
+
 static void (*port_a_callback)(void) = 0;
 static void (*port_b_callback)(void) = 0;
 static void (*port_c_callback)(void) = 0;

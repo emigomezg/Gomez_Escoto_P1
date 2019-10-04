@@ -15,11 +15,13 @@
  */
 int main(void) {
 
-	KEYBOARD_init(GPIO_B,bit_11,bit_10,bit_3,bit_2,bit_20);
+
 
   	/* Init board hardware. */
 	while(1){
+		if(KEYBOARD_is_data_ready()){
 
+		}
 	}
 
 

@@ -9,14 +9,9 @@
 #define KEYBOARD4X4_H_
 
 #include "GPIO.h"
+#include "NVIC.h"
+#include "bits.h"
 
-
-
-#define GPIO_CLOCKA  GPIO_CLOCK_GATING_PORTA
-#define GPIO_CLOCKB  GPIO_CLOCK_GATING_PORTB
-#define GPIO_CLOCKC  GPIO_CLOCK_GATING_PORTC
-#define GPIO_CLOCKD  GPIO_CLOCK_GATING_PORTD
-#define GPIO_CLOCKE  GPIO_CLOCK_GATING_PORTE
 
 #define KEY_1 		3084
 #define KEY_2 		3080
@@ -38,6 +33,9 @@
 
 
 void KEYBOARD_init(uint8_t GPIO_PORT,uint8_t data1_pin, uint8_t data2_pin, uint8_t data3_pin, uint8_t data4_pin,uint8_t interrupt_pin);
+uint8_t KEYBOARD_is_data_ready(void);
+void KEYBOARD_clear_data_ready_flag(void);
+uint8_t KEYBOARD_get_data(void);
 
 
 

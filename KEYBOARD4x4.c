@@ -6,13 +6,11 @@
  */
 
 #include "KEYBOARD4x4.h"
-#include "NVIC.h"
-#include "bits.h"
 
 
 volatile uint8_t g_port = 0;
-volatile uint8_t g_data_available =0;
-volatile uint8_t g_data =0;
+volatile uint8_t g_data_available = 0;
+volatile uint8_t g_data = 0;
 
 uint8_t KEYBOARD_get_port(void) {
 	return g_port;
@@ -78,8 +76,9 @@ void KEYBOARD_isr(void) {
 		data_in = 0x10;
 		break;
 	}
-	if(data_in!=0x10){
-		g_data = (uint8_t)data_in;
+	if (data_in != 0x10) {
+		g_data = (uint8_t) data_in;
+		g_data_available = TRUE;
 	}
 
 }
@@ -111,14 +110,16 @@ void KEYBOARD_init(uint8_t gpio_port, uint8_t data1_pin, uint8_t data2_pin,
 	NVIC_global_enable_interrupts;
 
 }
-uint8_t KEYBOARD_is_data_ready(void){
-	if(g_data_available ){
+uint8_t KEYBOARD_is_data_ready(void) {
+	if (g_data_available) {
 		return TRUE;
-	}else
-	{
+	} else {
 		return FALSE;
 	}
 }
-uint8_t KEYBOARD_get_data(void){
+uint8_t KEYBOARD_get_data(void) {
 	return g_data;
+}
+void KEYBOARD_clear_data_ready_flag(void) {
+	g_data_available = FALSE;
 }
