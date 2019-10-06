@@ -13,6 +13,8 @@
 #include "RGBK64.h"
 #include "GPIO.h"
 #include "SM_SG.h"
+#include "MOTOR.h"
+#include "bits.h"
 
 
 

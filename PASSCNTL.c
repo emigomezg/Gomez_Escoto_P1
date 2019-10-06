@@ -14,6 +14,9 @@
 #define KEYBOARD_DATA3			bit_2
 #define KEYBOARD_DATA_READY_PIN bit_20
 
+
+
+
 #define PASS_SIZE 4
 
 #define AS 0x0A
@@ -51,49 +54,16 @@ volatile uint8_t control_machine = 0;
 
 
 void PASSCNTL_begin(void) {
+	led_motor_pins_t LED1_motor={GPIO_C,bit_11};
+	led_motor_pins_t LED2_motor={GPIO_C,bit_10};
 
-	//LED_config_t LED_inicio = { GPIO_A, bit_0, GPIO_MUX1, OUTPUT };
-	//LED_config_t LED_error = { GPIO_A, bit_0, GPIO_MUX1, OUTPUT };
-	//LED_config_t LED_motor1 = { GPIO_A, bit_0, GPIO_MUX1, OUTPUT };
-	//LED_config_t LED_motor2 = { GPIO_A, bit_0, GPIO_MUX1, OUTPUT };
-	//LED_config_t LED_gen1 = { GPIO_A, bit_0, GPIO_MUX1, OUTPUT };
-	//LED_config_t LED_gen2 = { GPIO_A, bit_0, GPIO_MUX1, OUTPUT };
+	motor_pins_t MOTOR={GPIO_C,bit_16};
 
 	KEYBOARD_init(KEYBOARD_PORT, KEYBOARD_DATA0, KEYBOARD_DATA1, KEYBOARD_DATA2,
 	KEYBOARD_DATA3, KEYBOARD_DATA_READY_PIN); //
 	//running necessary configuration in order to use the RGB in the k64
 	RGB_Begin();
-
-	//clcock_gating_necesesary LEDS
-	/*GPIO_clock_gating(LED_inicio.port);
-	 GPIO_clock_gating(LED_error.port);
-	 GPIO_clock_gating(LED_motor1.port);
-	 GPIO_clock_gating(LED_motor2.port);
-	 GPIO_clock_gating(LED_gen1.port);
-	 GPIO_clock_gating(LED_gen2.port);
-
-	 //PCR_LEDS;
-	 GPIO_pin_control_register(LED_inicio.port, LED_inicio.pin, &LED_inicio.pcr);
-	 GPIO_pin_control_register(LED_error.port, LED_error.pin, &LED_error.pcr);
-	 GPIO_pin_control_register(LED_motor1.port, LED_motor1.pin, &LED_motor1.pcr);
-	 GPIO_pin_control_register(LED_motor2.port, LED_motor2.pin, &LED_motor2.pcr);
-	 GPIO_pin_control_register(LED_gen1.port, LED_gen1.pin, &LED_gen1.pcr);
-	 GPIO_pin_control_register(LED_gen2.port, LED_gen2.pin, &LED_gen2.pcr);
-
-	 //LED PORTS SET AS OUTPUT
-	 GPIO_data_direction_pin(LED_inicio.port, LED_inicio.direction,
-	 LED_inicio.pin);
-	 GPIO_data_direction_pin(LED_error.port, LED_error.direction, LED_error.pin);
-	 GPIO_data_direction_pin(LED_motor1.port, LED_motor1.direction,
-	 LED_motor1.pin);
-	 GPIO_data_direction_pin(LED_motor2.port, LED_motor2.direction,
-	 LED_motor2.pin);
-	 GPIO_data_direction_pin(LED_gen1.port, LED_gen1.direction, LED_gen1.pin);
-	 GPIO_data_direction_pin(LED_gen2.port, LED_gen2.direction, LED_gen2.pin);
-	 //necessary configuration for use of switches as interruptions on raising edge interrupt
-	 */
-	GPIO_sw2_begin(INTERRUPT);
-
+	MOTOR_begin(LED1_motor,LED2_motor,MOTOR);
 	SM_SG_init();
 }
 void PSSCNTL_clean_passcode(void) {
@@ -132,14 +102,19 @@ void PASSCNTL_master_passcode(void) {
 void PASSCNTL_verfiy_state(uint8_t temp_data,uint8_t possible1,uint8_t possible2) {
 	if ((temp_data == AS) && (A_selected_flag == FALSE)) {
 		A_selected_flag = TRUE;
+		g_pass_index=0;
 		control_machine = temp_data;
 	} else if ((temp_data == BS) && (B_selected_flag == FALSE)) {
 		B_selected_flag = TRUE;
+		g_pass_index=0;
 		control_machine = temp_data;
-	} else if ((A_selected_flag || B_selected_flag)
+	} else if ((control_machine)
 			&& ((temp_data != AS) && (temp_data != BS))) {
 		g_passcode[g_pass_index] = temp_data;
 		g_pass_index++;
+	}else{
+		A_selected_flag=FALSE;
+		B_selected_flag=FALSE;
 	}
 	if (g_pass_index == PASS_SIZE && control_machine == AS) {
 		for (int a = 0; a < PASS_SIZE; a++) {
