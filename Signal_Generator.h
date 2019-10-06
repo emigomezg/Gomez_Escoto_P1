@@ -13,7 +13,7 @@
 #include "DAC.h"
 #include "MK64F12.h"
 
-typedef enum {SINE,TRIANGLE}waveform_t;
+typedef enum {NONE,SQUARE,SINE,TRIANGLE}waveform_t;
 
 void DAC1_signal_creator(uint8_t wave_form);
 

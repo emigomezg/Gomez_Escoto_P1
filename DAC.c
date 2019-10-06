@@ -33,11 +33,6 @@
  */
 
 #include "DAC.h"
-#include "Signal_Generator.h"
-
-dac_data_out_t DAC0_data_t = {0,0};
-
-dac_data_out_t DAC1_data_t = {0,0};
 
 void DAC0_init(void)
 {
