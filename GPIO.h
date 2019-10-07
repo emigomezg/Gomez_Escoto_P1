@@ -109,9 +109,37 @@ typedef enum {
 /*! This data type is used to configure the pin control register*/
 typedef const uint32_t gpio_pin_control_register_t;
 
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ \brief	 This function contains the callback for ISR of the desired GPIO port.
+ \param[in]  The ISR desired function and the PORT
+ \return void
+ \todo Implement a mechanism to clear interrupts by a specific pin.
+ */
 void GPIO_callback_init(void (*handler)(void),uint8_t port);
 
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ \brief	 This function clears the handler flag of the desired GPIO port..
+ \param[in]  port_name Port to clear handler flag.
+ \return void
+ \todo Implement a mechanism to clear handler flag by a specific pin.
+ */
 void GPIO_clear_irq_status(gpio_port_name_t gpio);
+
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ \brief	 This function gets the handler flag of the desired GPIO port..
+ \param[in]  port_name Port to get handler flag.
+ \return uint8_t of the status
+ \todo Implement a mechanism to clear handler flag by a specific pin.
+ */
 
 uint8_t GPIO_get_irq_status(gpio_port_name_t gpio);
 
