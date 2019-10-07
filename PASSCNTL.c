@@ -41,12 +41,12 @@ struct MACHINE
 	uint8_t next_state;
 } machine_state_s;
 
-const uint8_t g_masterpass[4] = { 1, 2, 3, 4 };
-const uint8_t g_signal_pass[4] = { 4, 5, 6, 7 };
-const uint8_t g_motor_pass[4] = { 7, 8, 9, 0 };
+const uint8_t g_masterpass[PASS_SIZE] = { 1, 2, 3, 4 };
+const uint8_t g_signal_pass[PASS_SIZE] = { 4, 5, 6, 7 };
+const uint8_t g_motor_pass[PASS_SIZE] = { 7, 8, 9, 0 };
 
 volatile uint8_t g_state_machine_status = FALSE;
-volatile uint8_t g_passcode[4] = { 0 };
+volatile uint8_t g_passcode[PASS_SIZE] = { 0 };
 volatile uint8_t g_pass_index = 0;
 
 
@@ -193,6 +193,8 @@ void PASSCNTL_verfiy_state(uint8_t temp_data,uint8_t possible1,uint8_t possible2
 		g_pass_index++;
 	}else
 	{
+		g_error_flag=TRUE;
+		PIT_enable_timer(PIT_2);
 		A_selected_flag=FALSE;
 		B_selected_flag=FALSE;
 	}
