@@ -30,17 +30,52 @@
 #define KEY_ptr	    12
 #define KEY_D		0
 
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ \brief	 This function initializes the desired port and bits(4 data bits and 1 interrupt bit)
+         to be used with matrix keyboard (4*4) 
+ \param[in]  The desired port, 4 bits for data and 1  bit for the interrupt. 
+ \return void
+ \todo 
+ */
+void KEYBOARD_init(uint8_t GPIO_PORT,uint8_t data1_pin, uint8_t data2_pin, 
+                   uint8_t data3_pin, uint8_t data4_pin,uint8_t interrupt_pin);
 
-
-
-
-
-void KEYBOARD_init(uint8_t GPIO_PORT,uint8_t data1_pin, uint8_t data2_pin, uint8_t data3_pin, uint8_t data4_pin,uint8_t interrupt_pin);
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ \brief	 This function checks if there is any data available to be acquire by using a global flag.
+ \param[in]  void
+ \return void
+ \todo 
+ */
 uint8_t KEYBOARD_is_data_ready(void);
+
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ \brief	 This function clears the global variable that checks if there is any data available to
+         be colected.
+ \param[in]  void
+ \return void
+ \todo 
+ */
 void KEYBOARD_clear_data_ready_flag(void);
+
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ \brief	 This function gets the data global variable and returns it when called.
+ \param[in]  void
+ \return uint8_t
+ \todo 
+ */
 uint8_t KEYBOARD_get_data(void);
-
-
 
 
 #endif /* KEYBOARD4X4_H_ */
