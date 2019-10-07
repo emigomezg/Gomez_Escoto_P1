@@ -16,11 +16,17 @@
 #include "bits.h"
 #include "PIT.h"
 #include "Signal_Generator.h"
+#include "RGBK64.h"
+
+typedef struct {
+	uint8_t port;
+	uint8_t pin;
+}SM_LED_config_t;
 
 #define SYSTEM_CLOCK (21000000U)
 #define DELAY (.0015738F)
 
-void SM_SG_init(void);
+void SM_SG_init(SM_LED_config_t led1,SM_LED_config_t led2);
 
 void SM_SG_wave_creation(void);
 

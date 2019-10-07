@@ -29,8 +29,6 @@ enum {
 typedef struct {
 	uint8_t port;
 	uint8_t pin;
-	gpio_pin_control_register_t pcr;
-	uint8_t direction;
 } LED_config_t;
 
 struct MACHINE {
@@ -53,6 +51,11 @@ volatile uint8_t B_selected_flag = FALSE;
 volatile uint8_t control_machine = 0;
 
 
+LED_config_t led_error = {GPIO_C,bit_17};
+LED_config_t led_correct = {GPIO_B,bit_9};
+uint8_t g_error_flag = FALSE, g_correct_flag=FALSE;
+void PASSCNTL_PIT_handler(void);
+
 void PASSCNTL_begin(void) {
 	led_motor_pins_t LED1_motor={GPIO_C,bit_11};
 	led_motor_pins_t LED2_motor={GPIO_C,bit_10};
@@ -62,9 +65,58 @@ void PASSCNTL_begin(void) {
 	KEYBOARD_init(KEYBOARD_PORT, KEYBOARD_DATA0, KEYBOARD_DATA1, KEYBOARD_DATA2,
 	KEYBOARD_DATA3, KEYBOARD_DATA_READY_PIN); //
 	//running necessary configuration in order to use the RGB in the k64
-	RGB_Begin();
+
 	MOTOR_begin(LED1_motor,LED2_motor,MOTOR);
-	SM_SG_init();
+	SM_LED_config_t sm_led1 ={GPIO_B,bit_18};
+	SM_LED_config_t sm_led2 ={GPIO_B,bit_19};
+
+
+	SM_SG_init(sm_led1,sm_led2);
+	//GPIO_Error and pass
+	gpio_pin_control_register_t pcr = GPIO_MUX1;
+
+	GPIO_clock_gating(led_error.port);
+	GPIO_clock_gating(led_correct.port);
+
+	GPIO_pin_control_register(led_error.port, led_error.pin, &pcr);
+	GPIO_pin_control_register(led_correct.port, led_correct.pin, &pcr);
+
+	GPIO_clear_pin(led_error.port, led_error.pin);
+	GPIO_clear_pin(led_correct.port, led_correct.pin);
+
+	GPIO_data_direction_pin(led_correct.port, GPIO_OUTPUT, led_correct.pin);
+	GPIO_data_direction_pin(led_error.port, GPIO_OUTPUT, led_error.pin);
+
+
+	//PIT 2
+	PIT_clock_gating();
+	PIT_enable();
+	NVIC_enable_interrupt_and_priotity(PIT_CH2_IRQ, PRIORITY_1);
+	NVIC_global_enable_interrupts;
+	My_float_pit_t onesec = 1.0;
+	PIT_delay(PIT_2, SYSTEM_CLOCK, onesec);
+	PIT_enable_interrupt(PIT_2);
+	PIT_enable_timer(PIT_2);
+
+	PIT_callback_init(PASSCNTL_PIT_handler, PIT_2);
+	PIT_disable_timer(PIT_2);
+}
+void PASSCNTL_PIT_handler(void){
+	static uint8_t times =4;
+	if(g_error_flag){
+		GPIO_toogle_pin(led_error.port, led_error.pin);
+	}else if(g_correct_flag){
+		GPIO_toogle_pin(led_correct.port, led_correct.pin);
+	}
+	times--;
+	if(times==0){
+			times=4;
+			PIT_disable_timer(PIT_2);
+			GPIO_clear_pin(led_error.port, led_error.pin);
+			GPIO_clear_pin(led_correct.port, led_correct.pin);
+			g_error_flag=FALSE;
+			g_correct_flag=FALSE;
+		}
 }
 void PSSCNTL_clean_passcode(void) {
 	g_pass_index = 0;
@@ -91,6 +143,11 @@ void PASSCNTL_master_passcode(void) {
 				}
 				if (g_pass_index == 0) {
 					g_state_machine_status = TRUE;
+					g_correct_flag=TRUE;
+					PIT_enable_timer(PIT_2);
+				}else{
+					g_error_flag=TRUE;
+					PIT_enable_timer(PIT_2);
 				}
 				g_pass_index = 0;
 			}
@@ -171,27 +228,27 @@ void PASSCNTL_loop(void) {
 		if(update_state){
 			switch(machine_state_s.next_state){
 			case STATE0:
-				//SM_off();
-				//SM_mot_off();
+				SM_off();
+				MOTOR_off();
 				machine_state_s.current_state= machine_state_s.next_state;
 				update_state=FALSE;
 				break;
 			case STATE1:
-				//SM_off();
-				//SM_mot_on();
+				SM_off();
+				MOTOR_on();
 				machine_state_s.current_state= machine_state_s.next_state;
 				update_state=FALSE;
 				break;
 			case STATE2:
 				machine_state_s.current_state= machine_state_s.next_state;
-				//SM_on();
-				//SM_mot_off();
+				SM_on();
+				MOTOR_off();
 				update_state=FALSE;
 				break;
 			case STATE3:
 				machine_state_s.current_state= machine_state_s.next_state;
-				//SM_on();
-				//SM_mot_on();
+				SM_on();
+				MOTOR_on();
 				update_state=FALSE;
 				break;
 			}

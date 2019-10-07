@@ -25,6 +25,7 @@ void KEYBOARD_set_port(uint8_t port) {
 
 }
 uint32_t KEABOARD_decode_data(uint32_t data_in) {
+
 	data_in &= (1 << g_pin_dataA | 1 << g_pin_dataB | 1 << g_pin_dataC
 			| 1 << g_pin_dataD | 1 << g_pin_interrupt);
 	switch (data_in) {

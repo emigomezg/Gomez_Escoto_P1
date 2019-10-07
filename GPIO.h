@@ -17,9 +17,7 @@
 #include "MK64F12.h"
 
 
-typedef enum{
-	OUTPUT,INPUT
-}gpio_direction_pcr;
+
 
 /** Constant that represent the clock enable for GPIO A */
 #define GPIO_CLOCK_GATING_PORTA 0x00000200

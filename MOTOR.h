@@ -24,5 +24,7 @@ typedef struct{
 
 
 void MOTOR_begin(led_motor_pins_t led1,led_motor_pins_t led2,motor_pins_t motor);
+void MOTOR_on(void);
+void MOTOR_off(void);
 
 #endif /* MOTOR_H_ */

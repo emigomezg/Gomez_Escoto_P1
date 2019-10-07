@@ -74,7 +74,8 @@ void PIT_enable_timer(PIT_timer_t pit)
 
 void PIT_disable_timer(PIT_timer_t pit)
 {
-	PIT->CHANNEL[pit].TCTRL |= ~(PIT_TCTRL_TEN_MASK);
+	uint32_t disable = PIT_TCTRL_TEN_MASK;
+	PIT->CHANNEL[pit].TCTRL &= ~(disable);
 }
 
 
