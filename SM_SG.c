@@ -111,6 +111,8 @@ void SM_off(void)
 	GPIO_clear_pin(g_smled1.port, g_smled1.pin);
 	GPIO_clear_pin(g_smled2.port, g_smled2.pin);
 	RGB_Clear_Color(RGB_WHITE);
+
+	DAC0_signal_creator(NONE);
 }
 
 void SM_PIT0_handler (void)
