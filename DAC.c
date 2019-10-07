@@ -28,8 +28,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * @brief   Application entry point.
+/**
+ \file	DAC
+ \brief
+ This is the source file for the DAC device driver for Kinetis K64.
+ It contains all the implementation for configuration functions and runtime functions.
+ i.e., this is the application programming interface (API) for the DAC peripheral.
+ \author Emiliano Gómez Guerrero, IE708504@iteso.mx
+ \date	4/10/2019
+ \todo
+ Interrupts are not implemented in this API implementation.
  */
 
 #include "DAC.h"
@@ -49,7 +57,7 @@ void DAC1_init(void)
 void DAC0_out_value(dac_data_out_t data_out)
 {
 
-	DAC0->DAT[0].DATL = data_out.data_low;
+	DAC0->DAT[0].DATL = data_out.data_low;	
 	DAC0->DAT[0].DATH = data_out.data_high;
 }
 
