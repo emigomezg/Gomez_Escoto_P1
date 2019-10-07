@@ -16,19 +16,23 @@ volatile uint8_t g_pin_dataC = 0;
 volatile uint8_t g_pin_dataD = 0;
 volatile uint8_t g_pin_interrupt = 0;
 
-uint8_t KEYBOARD_get_port(void) {
+uint8_t KEYBOARD_get_port(void)
+{
 	return g_port;
 }
 
-void KEYBOARD_set_port(uint8_t port) {
+void KEYBOARD_set_port(uint8_t port)
+{
 	g_port = port;
 
 }
-uint32_t KEABOARD_decode_data(uint32_t data_in) {
+uint32_t KEABOARD_decode_data(uint32_t data_in)
+{
 
 	data_in &= (1 << g_pin_dataA | 1 << g_pin_dataB | 1 << g_pin_dataC
 			| 1 << g_pin_dataD | 1 << g_pin_interrupt);
-	switch (data_in) {
+	switch (data_in)
+	{
 	case KEY_1:
 		data_in = 1;
 		break;
@@ -83,12 +87,15 @@ uint32_t KEABOARD_decode_data(uint32_t data_in) {
 	return data_in;
 }
 
-void KEYBOARD_isr(void) {
-	if (!g_data_available) {
+void KEYBOARD_isr(void)
+{
+	if (!g_data_available)
+	{
 		uint8_t gpio_port = KEYBOARD_get_port();
 		volatile uint32_t data_in = GPIO_read_port(gpio_port);
 		data_in = KEABOARD_decode_data(data_in);
-		if (data_in != 0x10) {
+		if (data_in != 0x10)
+		{
 			g_data = (uint8_t) data_in;
 			g_data_available = TRUE;
 		}
@@ -96,7 +103,8 @@ void KEYBOARD_isr(void) {
 }
 
 void KEYBOARD_init(uint8_t gpio_port, uint8_t data1_pin, uint8_t data2_pin,
-		uint8_t data3_pin, uint8_t data4_pin, uint8_t interrupt_pin) {
+		uint8_t data3_pin, uint8_t data4_pin, uint8_t interrupt_pin)
+{
 	g_pin_dataA = data1_pin;
 	g_pin_dataB = data2_pin;
 	g_pin_dataC = data3_pin;
@@ -126,16 +134,21 @@ void KEYBOARD_init(uint8_t gpio_port, uint8_t data1_pin, uint8_t data2_pin,
 	NVIC_global_enable_interrupts;
 
 }
-uint8_t KEYBOARD_is_data_ready(void) {
-	if (g_data_available) {
+uint8_t KEYBOARD_is_data_ready(void)
+{
+	if (g_data_available)
+	{
 		return TRUE;
-	} else {
+	} else
+	{
 		return FALSE;
 	}
 }
-uint8_t KEYBOARD_get_data(void) {
+uint8_t KEYBOARD_get_data(void)
+{
 	return g_data;
 }
-void KEYBOARD_clear_data_ready_flag(void) {
+void KEYBOARD_clear_data_ready_flag(void)
+{
 	g_data_available = FALSE;
 }

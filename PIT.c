@@ -140,7 +140,8 @@ void PIT_flag_set(PIT_timer_t pit)
 	PIT->CHANNEL[pit].TFLG |= PIT_TFLG_TIF_MASK;
 	uint32_t dummyRead = PIT->CHANNEL[pit].TCTRL;
 	dummyRead /= 1;
-	switch (pit) {
+	switch (pit)
+	{
 	case PIT_0:
 		g_pit_flag.pit_flag_0 = TRUE;
 		break;

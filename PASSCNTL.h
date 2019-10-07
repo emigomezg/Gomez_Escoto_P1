@@ -17,10 +17,6 @@
 #include "bits.h"
 
 
-
-
-
-
 void PASSCNTL_loop(void);
 void PASSCNTL_begin(void);
 

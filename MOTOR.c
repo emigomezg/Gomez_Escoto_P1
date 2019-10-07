@@ -19,7 +19,8 @@ typedef enum{
 	LED_OFF,LED_ON
 }leds;
 
-typedef struct {
+typedef struct
+{
 	My_float_pit_t time[4];
 	uint8_t num_states;
 	uint8_t index;
@@ -27,7 +28,8 @@ typedef struct {
 	uint8_t led2_status;
 } pit_state_machine_t;
 
-struct motor{
+struct motor
+{
 	uint8_t port;
 	uint8_t pin;
 }g_motor,g_led1,g_led2;
@@ -40,8 +42,8 @@ volatile uint8_t g_motor_global_state = 0;
 void MOTOR_PIT1_handler(void);
 void MOTOR_GPIOC_handler(void);
 
-void MOTOR_begin(led_motor_pins_t led1, led_motor_pins_t led2,
-		motor_pins_t motor) {
+void MOTOR_begin(led_motor_pins_t led1, led_motor_pins_t led2,motor_pins_t motor)
+{
 	state[0].led1_status =LED_OFF;
 	state[0].led2_status =LED_OFF;
 	state[1].time[0] = DELAY1;
@@ -128,12 +130,15 @@ void MOTOR_PIT1_handler(void)
 	PIT_clear_interrupt_flag(PIT_1);
 
 }
-void MOTOR_GPIOC_handler(void) {
-	if (g_motor_global_state) {
+void MOTOR_GPIOC_handler(void)
+{
+	if (g_motor_global_state)
+	{
 		current_state++;
 		if (current_state == PSTATE3)
 			current_state = PSTATE0;
-		if(current_state==PSTATE0){
+		if(current_state==PSTATE0)
+		{
 			PIT_disable_timer(PIT_1);
 			GPIO_clear_pin(g_motor.port, g_motor.pin);
 		}else
@@ -144,7 +149,8 @@ void MOTOR_GPIOC_handler(void) {
 			GPIO_clear_pin(g_led1.port, g_led1.pin);
 		if(state[current_state].led2_status)
 			GPIO_set_pin(g_led2.port, g_led2.pin);
-		else{
+		else
+		{
 			GPIO_clear_pin(g_led2.port, g_led2.pin);
 		}
 
@@ -153,13 +159,16 @@ void MOTOR_GPIOC_handler(void) {
 	}
 }
 
-void MOTOR_on() {
+void MOTOR_on()
+{
 	g_motor_global_state = TRUE;
-	//PIT_enable_timer(PIT_1);
+	PIT_enable_timer(PIT_1);
 }
-void MOTOR_off() {
+void MOTOR_off()
+{
 	g_motor_global_state = FALSE;
 	GPIO_clear_pin(g_led1.port, g_led1.pin);
 	GPIO_clear_pin(g_led2.port, g_led2.pin);
-	//PIT_disable_timer(PIT_1);
+	GPIO_clear_pin(g_motor.port, g_motor.pin);
+	PIT_disable_timer(PIT_1);
 }
